@@ -5,4 +5,3 @@ pandas
 datetime
 urllib3
 seaborn==0.11.0
-base64
