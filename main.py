@@ -28,34 +28,34 @@ st.title('Data Quality & Assurance')
 st.header('Testes de Formatação')
 
 
-st.subheader('**Selecione uma das Opções**')
-options = st.radio('O que deseja fazer?',('Carregar Arquivo', 'Conectar ao BD'))
-if options == 'Carregar Arquivo':
-    data = st.file_uploader('Escolha o dataset (.csv)', type = 'csv')
-    if data is not None:
-        df = pd.read_csv(data)
-        df['data'] = pd.to_datetime(df['data'], format='%m/%d/%Y')
-if options == 'Conectar ao BD':
-    import sqlalchemy as db
-    import pandas as pd
-    import pyodbc 
-    from sqlalchemy import create_engine
-    server = st.text_input(label='Server:')
-    database = st.text_input(label='Banco de dados:')
-    username = st.text_input(label='Usuário:')
-    password = st.text_input(label='Senha:')
-    engine = db.create_engine(f"mssql+pyodbc://{username}:{password}@{server}/{database}\
-                        ?driver=ODBC Driver 17 for SQL Server", fast_executemany=True)
-    conn = pyodbc.connect('DRIVER={ODBC Driver 17 for SQL Server};SERVER='+server+';DATABASE='+database+';UID='+username+';PWD='+ password)
-    cursor = conn.cursor()
-    query = "SELECT * FROM Volt_Client_DataScience.bbce.negocios;"
-    df = pd.read_sql(query, conn)
-    conn.close()
-    df['data'] = pd.to_datetime(df['data'], format='%Y-%m-%d')
+#st.subheader('**Selecione uma das Opções**')
+#options = st.radio('O que deseja fazer?',('Carregar Arquivo', 'Conectar ao BD'))
+#if options == 'Carregar Arquivo':
+#    data = st.file_uploader('Escolha o dataset (.csv)', type = 'csv')
+#    if data is not None:
+#        df = pd.read_csv(data)
+#        df['data'] = pd.to_datetime(df['data'], format='%m/%d/%Y')
+#if options == 'Conectar ao BD':
+#    import sqlalchemy as db
+#    import pandas as pd
+#    import pyodbc 
+#    from sqlalchemy import create_engine
+#    server = st.text_input(label='Server:')
+#    database = st.text_input(label='Banco de dados:')
+#    username = st.text_input(label='Usuário:')
+#    password = st.text_input(label='Senha:')
+#    engine = db.create_engine(f"mssql+pyodbc://{username}:{password}@{server}/{database}\
+#                        ?driver=ODBC Driver 17 for SQL Server", fast_executemany=True)
+#    conn = pyodbc.connect('DRIVER={ODBC Driver 17 for SQL Server};SERVER='+server+';DATABASE='+database+';UID='+username+';PWD='+ password)
+#    cursor = conn.cursor()
+#    query = "SELECT * FROM Volt_Client_DataScience.bbce.negocios;"
+#    df = pd.read_sql(query, conn)
+#    conn.close()
+#    df['data'] = pd.to_datetime(df['data'], format='%Y-%m-%d')
   
 
 
-#df = pd.read_csv('/Users/batistagabriela/Documents/Volt Robotics/Historico_BBCE.csv', sep=',') 
+df = pd.read_csv('Historico_BBCE.csv', sep=',') 
 
 
 
@@ -84,6 +84,7 @@ df['local'] = df['local'].astype('string',copy=False)
 df['qtde_mwm'] = df['qtde_mwm'].astype('float',copy=False)
 df['qtde_mwh'] = df['qtde_mwh'].astype('float',copy=False)
 df['data_completa'] = pd.to_datetime(df['data_completa']) #'%m-%d-%Y %I:%M%p'
+df['data'] = pd.to_datetime(df['data'], format='%Y-%m-%d')
 df['time'] = pd.to_datetime(df['time'], format='%H:%M:%S')
 
 with row3_2, _lock:
