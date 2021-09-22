@@ -251,7 +251,7 @@ st.header('Data profiling')
 
 # descritivo dos dados
 from pandas_profiling import ProfileReport
-profile = ProfileReport(df, title=' ', config_file='/Users/batistagabriela/Documents/Volt Robotics/volt_config.yaml')
+profile = ProfileReport(df, title=' ', config_file='volt_config.yaml')
 
 #exportar no formato html
 #profile.to_file(output_file="dataframe_report.html")
