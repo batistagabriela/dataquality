@@ -117,6 +117,8 @@ else:
 
 st.header('Testes de Consistência')
 
+st.subheader('Data e hora')
+
 
 #checar se há datas inferiores a data de corte inicial ou maiores que a data atual
 date_start = datetime.strptime('2017-01-01 00:00:00','%Y-%m-%d %H:%M:%S')
@@ -197,6 +199,8 @@ else:
 
 st.header('Análises Relacionais')
 
+st.subheader('Variações de preço por produto')
+
 #verificar variações abruptas de preço
 produto = np.array(df['produto'].unique())
 for prod in produto:
@@ -225,15 +229,10 @@ else:
     st.write('Variações de preço dentro dos limites esperados.')
 
 
-
-st.subheader('Variações de preço por produto')
-
-
+st.write('Selecione um produto para visualizar a variação de preço ao longo do tempo.')
 sns.set_style('darkgrid')
-
 sec_expander = st.expander(label='Visualizar lista de produtos')
-with sec_expander:
-    'Selecione um produto para visualizar a variação de preço ao longo do tempo.'
+with sec_expander:    
     for prod in produto:
         check = st.checkbox(prod)
         if check:
