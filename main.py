@@ -97,8 +97,9 @@ with row3_2, _lock:
 
 
 #colunas para marcar anomalias - Registro com anomalia/outlier = 1
-df['flag_datetime'] = 0
 df['avg_preco'] = 0
+df['year'] = df['data'].dt.year 
+df['flag_datetime'] = 0
 df['flag_preco'] = 0
 
 #verificando se há ids duplicados
@@ -140,12 +141,10 @@ else:
 # Checar se há operações registradas antes/depois do horário previsto de início/fim das operações.
 #Pelas regras de negócio, é esperado operações fora do intervalo 09h-18h para Boleta
 
-
 st.write('')
 time_open = datetime.strptime('08:55:00','%H:%M:%S')
 time_close = datetime.strptime('18:30:00','%H:%M:%S')
 st.write('Limites de horário esperados -> ' + 'Início: ' + str(time_open) + ' Fim: ' + str(time_close))
-
 
 
 #verificação para Balcao
@@ -159,6 +158,7 @@ if (df['local'] != 'Boleta' ).any() & (df['time'] < time_open).any():
 
     st.write('Há ' + str(count) +
              ' ('+ str(percent)+'%) ' + ' registros que violam os limites de horário inicial:')
+    st.write(time_mask_before.groupby(['tipo', 'year']).agg({'flag_datetime':np.sum}))
     st.write(time_mask_before.sort_values(by=['time']))
 
 else:
@@ -175,6 +175,7 @@ if (df['local'] != 'Boleta' ).any() & (df['time'] > time_close).any():
     percent = round((time_mask_after['time'].count()/df['produto'].count())*100,2)
     
     st.write('Há ' + str(count) + ' ('+ str(percent) +'%)' +' registros que violam os limites de horário final:')
+    st.write(time_mask_after.groupby(['tipo', 'year']).agg({'flag_datetime':np.sum}))
     st.write(time_mask_after.sort_values(by=['time']))
 
 else:
@@ -214,6 +215,10 @@ df['flag_preco'] = np.where((df['preco'] > 1.50*df['avg_preco']) | (abs(df['prec
 
 if (df['flag_preco'] == 1 ).any():
     st.write('Há ' + str(df['flag_preco'].sum()) +' ('+ str(round((df['flag_preco'].sum()/df['flag_preco'].count())*100,2)) +'%)' + ' registros com variações abruptas de preço: ')
+    st.write('Variações por ano e por tipo de operação:')
+    flag_preco_ano=df[['flag_preco','year','tipo']]
+    flag_preco_ano = flag_preco_ano[(flag_preco_ano['flag_preco'] == 1)]
+    st.write(flag_preco_ano.groupby(['tipo', 'year']).agg({'flag_preco':np.sum}))
     st.write(df[(df['flag_preco'] == 1)])
 
 else:
