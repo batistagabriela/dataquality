@@ -2,7 +2,6 @@
 # coding: utf-8
 
 # SCRIPT EM DESENVOLVIMENTO
-
 from matplotlib.backends.backend_agg import RendererAgg
 import pandas as pd 
 import numpy as np
