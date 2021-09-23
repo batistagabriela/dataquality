@@ -3,7 +3,6 @@
 
 # SCRIPT EM DESENVOLVIMENTO
 
-
 from matplotlib.backends.backend_agg import RendererAgg
 import pandas as pd 
 import numpy as np
@@ -23,9 +22,6 @@ st.title('Data Quality & Assurance')
 
 
 # # **Leitura do dataset e testes de formatação**
-
-
-st.header('Testes de Formatação')
 
 
 #st.subheader('**Selecione uma das Opções**')
@@ -54,10 +50,9 @@ st.header('Testes de Formatação')
 #    df['data'] = pd.to_datetime(df['data'], format='%Y-%m-%d')
   
 
+st.header('Testes de Formatação')
 
 df = pd.read_csv('Historico_BBCE.csv', sep=',') 
-
-
 
 import io 
 matplotlib.use("agg")
