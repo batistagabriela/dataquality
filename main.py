@@ -227,7 +227,8 @@ else:
 st.write('Selecione um produto para visualizar a variação de preço ao longo do tempo.')
 sns.set_style('darkgrid')
 sec_expander = st.expander(label='Visualizar lista de produtos')
-with sec_expander:    
+with sec_expander:
+    'Escolha os itens que deseja visualizar'
     for prod in produto:
         check = st.checkbox(prod)
         if check:
