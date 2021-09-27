@@ -51,7 +51,7 @@ st.title('Data Quality & Assurance')
 
 st.header('Testes de Formatação')
 
-df = pd.read_csv('Historico_BBCE.csv', sep=',') 
+df = pd.read_csv('BBCE.csv', sep=',') 
 
 import io 
 matplotlib.use("agg")
