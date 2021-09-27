@@ -17,7 +17,8 @@ import base64
 st.set_page_config(layout="wide")
 
 
-st.title('Relatório de Qualidade dos Dados - Validação, Análise e Tratamento')
+st.title('Relatório de Qualidade dos Dados:')
+st.title('Validação, Análise e Tratamento')
 
 
 # # **Leitura do dataset e testes de formatação**
