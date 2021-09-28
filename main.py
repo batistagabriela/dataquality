@@ -17,7 +17,8 @@ import base64
 st.set_page_config(layout="wide")
 
 
-st.title('Data Quality & Assurance')
+st.title('Relatório de Qualidade dos Dados:')
+st.title('Validação, Análise e Tratamento')
 
 
 # # **Leitura do dataset e testes de formatação**
@@ -49,9 +50,11 @@ st.title('Data Quality & Assurance')
 #    df['data'] = pd.to_datetime(df['data'], format='%Y-%m-%d')
   
 
-st.header('Testes de Formatação')
+st.header('Testes de Integridade')
 
 df = pd.read_csv('BBCE.csv', sep=',') 
+
+st.subheader('Validação da formatação')
 
 import io 
 matplotlib.use("agg")
@@ -109,9 +112,9 @@ else:
 # # **Testes de Consistência**
 
 
-st.header('Testes de Consistência')
+st.subheader('Validação de datas e horários')
 
-st.subheader('Data e hora')
+#st.subheader('Data e hora')
 
 
 #checar se há datas inferiores a data de corte inicial ou maiores que a data atual
