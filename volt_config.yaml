@@ -23,7 +23,10 @@ variables:
     'local': 'Local de realização da operação - balcão ou boleta',
     'tend': 'Tipo de operação - compra ou venda',
     'data_completa': 'Data e hora da operação',
-    'flag': '1 indica que o registro viola regras de qualidade, 0 indica que o registro está de acordo com as regras.'
+    'year': 'Ano da operação',
+    'flag_datetime': '1 indica que o registro viola regras de consistência para data e hora, 0 indica que o registro está de acordo com as regras',
+    'media_preco': 'Preço pédio por produto por dia para cada tipo',
+    'flag_preco': '1 indica uma variação abrupta de preço em 24h'
   }
 
 # infer dtypes

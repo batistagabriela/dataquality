@@ -50,12 +50,21 @@ st.title('Validação, Análise e Tratamento')
 #    df['data'] = pd.to_datetime(df['data'], format='%Y-%m-%d')
   
 
+
+
+df = pd.read_csv('/Users/gabrielabatista/Downloads/BBCE.csv', sep=',')
+df.drop('Unnamed: 0', axis=1, inplace=True)
+
 st.header('Testes de Integridade')
-
-df = pd.read_csv('BBCE.csv', sep=',') 
-
 st.subheader('Validação da formatação')
 
+#verificando se há ids duplicados
+if len(df['id'].unique()) == len(df.index):
+    st.write('Não há registros duplicados.')
+else:
+    st.write('Há '+ (len(df.index)-len(df['id'].unique())) +' registros duplicados.')
+
+#checando formatos
 import io 
 matplotlib.use("agg")
 
@@ -93,20 +102,8 @@ with row3_2, _lock:
         st.text(s)
 
 
-#colunas para marcar anomalias - Registro com anomalia/outlier = 1
-df['avg_preco'] = 0
+#coluna adicional para as agg por ano
 df['year'] = df['data'].dt.year 
-df['flag_datetime'] = 0
-df['flag_preco'] = 0
-
-#verificando se há ids duplicados
-
-if len(df['id'].unique()) == len(df.index):
-    df.set_index('id', inplace = True)
-else:
-    st.write('Há '+ str(len(df.index)-len(df['id'].unique())) +' registros duplicados.')
-
-#df.info()
 
 
 # # **Testes de Consistência**
@@ -181,16 +178,6 @@ else:
     st.write('Horários finais dentro do limite esperado')
 
 
-#verificações para Boleta
-#time_before = df[(df['local'] == 'Boleta' ) & (df['time'] < time_open)]
-#time_before.sort_values(by=['time']).sort_values(by=['time'])
-
-#time_after = df[(df['local'] == 'Boleta' ) & (df['time'] > time_close)]
-#time_after.sort_values(by=['time'])
-
-#time_before['time'].count() + time_after['time'].count()
-
-
 
 # # **Análises Relacionais**
 
@@ -199,20 +186,16 @@ st.header('Análises Relacionais')
 st.subheader('Variações de preço por produto')
 
 #verificar variações abruptas de preço
-produto = np.array(df['produto'].unique())
-for prod in produto:
-    prod_mask = df[(df['produto'] == prod)]
-    prod_mask = prod_mask.sort_values(by=['data_completa'])
-    data = np.array(prod_mask['data'].unique())
-    for date in data:
-        data_mask = prod_mask[(prod_mask['data'] == date)]
-        #data_mask['preco'] = abs(data_mask['preco'])
-        avg = data_mask['preco'].mean()
-        df.loc[(df.data == date) & (df.produto == prod), 'avg_preco'] = avg
 
+#calculo da media de preco por dia, por produto, por tipo
+avg = df.groupby(['tipo', 'produto', 'data'])['preco'].mean()
+avg = avg.reset_index()
+avg.rename(columns={'preco': 'media_preco'}, inplace = True)
 
-df['flag_preco'] = np.where((df['preco'] > 1.50*df['avg_preco']) | (abs(df['preco']) < 0.5*df['avg_preco']) , 1, 0)
+df = pd.merge(df, avg, on=['tipo', 'produto', 'data'], how='left')
 
+#determinacao das variacoes abruptas
+df['flag_preco'] = np.where((df['preco'] > 1.50*df['media_preco']) | (abs(df['preco']) < 0.5*df['media_preco']) , 1, 0)
 
 if (df['flag_preco'] == 1 ).any():
     st.write('Há ' + str(df['flag_preco'].sum()) +' ('+ str(round((df['flag_preco'].sum()/df['flag_preco'].count())*100,2)) +'%)' + ' registros com variações abruptas de preço: ')
@@ -221,24 +204,27 @@ if (df['flag_preco'] == 1 ).any():
     flag_preco_ano = flag_preco_ano[(flag_preco_ano['flag_preco'] == 1)]
     st.write(flag_preco_ano.groupby(['tipo', 'year']).agg({'flag_preco':np.sum}))
     st.write(df[(df['flag_preco'] == 1)])
-
 else:
-    st.write('Variações de preço dentro dos limites esperados.')
+    st.write('Variações de preço dentro dos limites esperados.') 
 
+
+#visualizacoes graficas
+
+st.subheader('Análises gráficas')
 
 st.write('Selecione um produto para visualizar a variação de preço ao longo do tempo.')
 sns.set_style('darkgrid')
 sec_expander = st.expander(label='Visualizar lista de produtos')
 with sec_expander:
     'Escolha os itens que deseja visualizar'
-    for prod in produto:
+    for prod in df['produto'].unique():
         check = st.checkbox(prod)
         if check:
             prod_mask = df[(df['produto'] == prod)]
             prod_mask = prod_mask.sort_values(by=['data_completa'])
             st.subheader('Variação de preço de ' + prod)
             fig, ax = plt.subplots(figsize=(10,6))
-            sns.lineplot(x = prod_mask['data_completa'], y = prod_mask['preco'], markers = True, palette = 'sandybrown', ax=ax)
+            sns.lineplot(x = prod_mask['data_completa'], y = prod_mask['preco'], hue = prod_mask['tipo'], markers = True, ax=ax)
             ax.set_xlabel("data")
             ax.set_ylabel("preço")
             locs, labels = plt.xticks()
@@ -254,7 +240,7 @@ st.header('Data profiling')
 
 # descritivo dos dados
 from pandas_profiling import ProfileReport
-profile = ProfileReport(df, title=' ', config_file='volt_config.yaml')
+profile = ProfileReport(df, title=' ', config_file='/Users/gabrielabatista/Downloads/volt_config.yaml')
 
 #exportar no formato html
 #profile.to_file(output_file="dataframe_report.html")
