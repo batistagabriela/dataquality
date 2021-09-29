@@ -138,8 +138,8 @@ else:
 #Pelas regras de negócio, é esperado operações fora do intervalo 09h-18h para Boleta
 
 st.write('')
-time_open = datetime.strptime('08:00:00','%H:%M:%S')
-time_close = datetime.strptime('19:00:00','%H:%M:%S')
+time_open = datetime.strptime('08:30:00','%H:%M:%S')
+time_close = datetime.strptime('19:30:00','%H:%M:%S')
 st.write('Limites de horário esperados -> ' + 'Início: ' + str(time_open) + ' Fim: ' + str(time_close))
 
 
