@@ -52,7 +52,7 @@ st.title('Validação, Análise e Tratamento')
 
 
 
-df = pd.read_csv('/Users/gabrielabatista/Downloads/BBCE.csv', sep=',')
+df = pd.read_csv('BBCE.csv', sep=',')
 df.drop('Unnamed: 0', axis=1, inplace=True)
 
 st.header('Testes de Integridade')
@@ -138,7 +138,7 @@ else:
 #Pelas regras de negócio, é esperado operações fora do intervalo 09h-18h para Boleta
 
 st.write('')
-time_open = datetime.strptime('08:55:00','%H:%M:%S')
+time_open = datetime.strptime('08:30:00','%H:%M:%S')
 time_close = datetime.strptime('18:30:00','%H:%M:%S')
 st.write('Limites de horário esperados -> ' + 'Início: ' + str(time_open) + ' Fim: ' + str(time_close))
 
@@ -240,7 +240,7 @@ st.header('Data profiling')
 
 # descritivo dos dados
 from pandas_profiling import ProfileReport
-profile = ProfileReport(df, title=' ', config_file='/Users/gabrielabatista/Downloads/volt_config.yaml')
+profile = ProfileReport(df, title=' ', config_file='volt_config.yaml')
 
 #exportar no formato html
 #profile.to_file(output_file="dataframe_report.html")
