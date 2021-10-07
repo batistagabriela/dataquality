@@ -38,6 +38,8 @@ st.title('Validação, Análise e Tratamento')
 
 df = pd.read_csv('BBCE.csv', sep=',')
 df.drop('Unnamed: 0', axis=1, inplace=True)
+df.drop('flag_algoritmo', axis=1, inplace=True)
+df.drop('flag_user', axis=1, inplace=True)
 tags = df.columns
 
 
