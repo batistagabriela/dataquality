@@ -62,7 +62,7 @@ else:
 if df.isnull().sum().any():
     check_null = 'Sim'
     qtd_null = df.isnull().sum().sum()
-    st.write(f'Há {qtd_null} registros duplicados.')
+    st.write(f'Há {qtd_null} registros nulos.')
 else:
     check_null = 'Não'
     qtd_null = 0
