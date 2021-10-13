@@ -38,6 +38,8 @@ st.title('Validação, Análise e Tratamento')
 
 df = pd.read_csv('BBCE.csv', sep=',')
 df.drop('Unnamed: 0', axis=1, inplace=True)
+df.drop('flag_validacao', axis=1, inplace=True)
+df.drop('flag_user', axis=1, inplace=True)
 tags = df.columns
 
 
@@ -62,7 +64,7 @@ else:
 if df.isnull().sum().any():
     check_null = 'Sim'
     qtd_null = df.isnull().sum().sum()
-    st.write(f'Há {qtd_null} registros duplicados.')
+    st.write(f'Há {qtd_null} registros nulos.')
 else:
     check_null = 'Não'
     qtd_null = 0
